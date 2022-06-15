@@ -6,9 +6,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: symfony_docker
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: symfony
+      MYSQL_DATABASE: db_api_cooking_recipes
+      MYSQL_USER: api_cooking_recipes
+      MYSQL_PASSWORD: apicookingrecipes
     ports:
       - '4306:3306'
     volumes:
@@ -22,6 +22,8 @@ services:
         GROUP_ID: ${GROUP_ID}
         GIT_EMAIL: ${GIT_EMAIL}
         GIT_NAME: ${GIT_NAME}
+    links:
+      - "database:database"
     ports:
       - '9000:9000'
     volumes:
