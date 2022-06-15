@@ -1,9 +1,9 @@
 # api-cooking-recipes
 An API to save your cooking recipes 🍪
 
-## TODO
-- use version 8.1 of PHP
-- name correctly the different images
-- use mariadb instead of mysql
-- Document everything with screenshots & texts (blog article)
-- Install composer & symfony
+
+
+### How does it works?
+- First copy the .env.dist into .env and fill the required infos
+- Then start it with ```docker-compose up -d --build```
+Et voilà!
