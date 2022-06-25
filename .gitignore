@@ -1,4 +1,4 @@
 TODO.md
 .env
-mysql
-mysql/*
+database/mongodb/*
+database/mysql/*
