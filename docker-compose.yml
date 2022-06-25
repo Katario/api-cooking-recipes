@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   mysql:
-    container_name: db_api_cooking_recipes
+    container_name: cooking-assistant-mysql
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -14,7 +14,7 @@ services:
     volumes:
       - ./database/mysql:/var/lib/mysql
   php:
-    container_name: php_api_cooking_recipes
+    container_name: cooking-assistant-api
     build:
       context: ./php
     ports:
@@ -24,7 +24,7 @@ services:
     depends_on:
       - mysql
   nginx:
-    container_name: nginx
+    container_name: cooking-assistant-nginx
     image: nginx:stable-alpine
     ports:
       - '8085:80'
@@ -36,7 +36,7 @@ services:
       - mysql
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: cooking-assistant-mongo
     environment:
         - MONGO_INITDB_ROOT_USERNAME=root
         - MONGO_INITDB_ROOT_PASSWORD=password
