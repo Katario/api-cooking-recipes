@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Api\JsonResponse;
 use App\Document\Recipe;
-use App\Repository\RecipeRepository;
+use App\Factory\RecipeFactory;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -58,9 +58,9 @@ class RecipeController extends AbstractController
     #[Route('/recipes', name: 'app_post_recipe_id', methods: 'POST')]
     public function postRecipeByIdAction(): Response
     {
-        $recipe = new Recipe();
-        $recipe->setName('this is a test');
-        $recipe->setOrigin('france');
+        // Supposed to sanitize & serialize the incoming params
+        // then
+        $recipe = RecipeFactory::create();
 
         $this->documentManager->persist($recipe);
         $this->documentManager->flush();
@@ -108,5 +108,4 @@ class RecipeController extends AbstractController
 
         return new JsonResponse($id);
     }
-
 }
