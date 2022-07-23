@@ -20,9 +20,6 @@ class Recipe
     #[MongoDB\Field(type: 'string')]
     private string $presentation;
 
-    #[MongoDB\Field(type: 'string')]
-    private string $tips;
-
     #[MongoDB\Field(type: 'int')]
     private int $cookingTime;
 
@@ -32,15 +29,18 @@ class Recipe
     #[MongoDB\EmbedMany(targetDocument:Step::class)]
     private ArrayCollection $steps;
 
+    #[MongoDB\EmbedMany(targetDocument:Tip::class)]
+    private ArrayCollection $tips;
+
     #[MongoDB\EmbedMany(targetDocument:Ingredient::class)]
     private ArrayCollection $ingredients;
 
     public function __construct()
     {
         $this->steps = new ArrayCollection();
+        $this->tips = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
     }
-
 
     public function getId(): ?string
     {
@@ -79,18 +79,6 @@ class Recipe
     public function setPresentation(string $presentation): self
     {
         $this->presentation = $presentation;
-
-        return $this;
-    }
-
-    public function getTips(): ?string
-    {
-        return $this->tips;
-    }
-
-    public function setTips(string $tips): self
-    {
-        $this->tips = $tips;
 
         return $this;
     }
@@ -138,6 +126,30 @@ class Recipe
     {
         if ($this->steps->contains($step)) {
             $this->steps->remove($step);
+        }
+
+        return $this;
+    }
+
+    /** @return Tip[] */
+    public function getTips(): array
+    {
+        return $this->tips->toArray();
+    }
+
+    public function addTip(Tip $tip): self
+    {
+        if (!$this->tips->contains($tip)) {
+            $this->tips->add($tip);
+        }
+
+        return $this;
+    }
+
+    public function removeTip(Tip $tip): self
+    {
+        if ($this->tips->contains($tip)) {
+            $this->tips->remove($tip);
         }
 
         return $this;

@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 #[MongoDB\EmbeddedDocument]
 class Ingredient
 {
-    #[MongoDB\ReferenceOne(targetDocument:Aliment::class, cascade:'persist')]
+    #[MongoDB\ReferenceOne(targetDocument:Aliment::class)]
     private Aliment $aliment;
 
     #[MongoDB\Field(type: 'int')]

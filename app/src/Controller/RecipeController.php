@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Api\JsonResponse;
 use App\Document\Recipe;
-use App\Factory\RecipeFactory;
+use App\Document\Aliment;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use PhpParser\JsonDecoder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,11 +58,30 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recipes', name: 'app_post_recipe_id', methods: 'POST')]
-    public function postRecipeByIdAction(): Response
+    public function postRecipeByIdAction(Request $request, SerializerInterface $serializer): Response
     {
-        // Supposed to sanitize & serialize the incoming params
-        // then
-        $recipe = RecipeFactory::create();
+        $alimentRepository = $this->documentManager->getRepository(Aliment::class);
+        // @TODO: will be replaced by a symfony form / add a validator to check everything later on
+        $recipe = $serializer->deserialize($request->getContent(), Recipe::class, 'json');
+        $countAlimentPersisted = 0;
+        // Does ingredients already exists?
+        foreach ($recipe->getIngredients() as $ingredient) {
+            $aliment = $ingredient->getAliment();
+            $alimentsFound = $alimentRepository->findBy(['name' => $aliment->getName()]);
+            if (sizeof($alimentsFound) > 0) {
+                // Replace by the first ingredient found
+                $ingredient->setAliment($alimentsFound[0]);
+
+                continue;
+            }
+            ++$countAlimentPersisted;
+
+            $this->documentManager->persist($aliment);
+        }
+
+        if ($countAlimentPersisted > 0) {
+            $this->documentManager->flush();
+        }
 
         $this->documentManager->persist($recipe);
         $this->documentManager->flush();
