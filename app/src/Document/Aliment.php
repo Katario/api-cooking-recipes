@@ -35,7 +35,7 @@ class Aliment
 
     public function getPresentation(): ?string
     {
-        return $this->presentation;
+        return $this->presentation ?? '';
     }
 
     public function setPresentation(string $presentation): self
