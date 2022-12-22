@@ -15,8 +15,7 @@ class JsonResponse extends Response
         string $jsonData,
         int $responseCode = 200,
         array $headers = []
-    )
-    {
+    ) {
         parent::__construct(
             $jsonData,
             $responseCode,

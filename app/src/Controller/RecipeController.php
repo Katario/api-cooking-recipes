@@ -61,15 +61,15 @@ class RecipeController extends AbstractController
     public function postRecipeByIdAction(Request $request, SerializerInterface $serializer): Response
     {
         $alimentRepository = $this->documentManager->getRepository(Aliment::class);
-        // @TODO: will be replaced by a symfony form / add a validator to check everything later on
+
+        // @TODO: add a validator to assert that there is at least ONE ingredient in the recipe
         $recipe = $serializer->deserialize($request->getContent(), Recipe::class, 'json');
         $countAlimentPersisted = 0;
-        // Does ingredients already exists?
+
         foreach ($recipe->getIngredients() as $ingredient) {
             $aliment = $ingredient->getAliment();
             $alimentsFound = $alimentRepository->findBy(['name' => $aliment->getName()]);
             if (sizeof($alimentsFound) > 0) {
-                // Replace by the first ingredient found
                 $ingredient->setAliment($alimentsFound[0]);
 
                 continue;
@@ -103,7 +103,7 @@ class RecipeController extends AbstractController
         return new JsonResponse('');
     }
 
-    // Reminder: PATCH update partially the resource. If needs to replace completely the resource, use PATCH
+    // Reminder: PATCH update partially the resource. If needs to replace completely the resource, use PUT
     #[Route('/recipes/{id}', name: 'app_patch_recipe_id', methods: 'PATCH')]
     public function patchRecipeByIdAction(
         string $id
